@@ -10,10 +10,12 @@ Ponowne wygenerowanie wyników: dopisz `--overwrite` (zastępuje GeoPackage).
 Parametry: `--input`, `--gdb`, `--output-dir`. Domyślnym wejściem jest
 `obwody_glosowania_Lublin_granice.xlsx`. Aby użyć innego wyniku pierwszego skryptu,
 np. `Plik_wynikowy.xlsx`, wskaż go przez `--input Plik_wynikowy.xlsx`.
+Aktualne domyślne źródło: `Adresy_PRG_Geoportal.gdb`.
+Domyślny skoroszyt pochodzi z `wyniki_PRG_Geoportal/01_granice`.
 Wymagania: Python 3.10+, GDAL z OpenFileGDB i GPKG, openpyxl oraz
 `rozbij_granice.py` obok skryptu. Ten skrypt korzysta z GDAL, nie z ArcPy.
 
-## Wyniki w folderze wyniki_adresy_PRG
+## Wyniki w folderze wyniki_PRG_Geoportal/02_przypisanie
 
 - `adresy_komisje_PRG.gpkg`: warstwa punktowa z geometrią, układem współrzędnych
   i atrybutami oryginalnego PRG oraz polami przypisań.

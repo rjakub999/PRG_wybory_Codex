@@ -25,8 +25,9 @@ python -m unittest test_rozbij_granice.py
 
 ## Uzgadnianie nazw
 
-Źródłem pisowni wynikowej jest `NAZWA_ULC` w warstwach `PRG_Ulice_Lublin`
-i `PRG_PunktyAdresowe_Lublin`. Pola `NAZWA_TER1` i `NAZWA_TER2` pomagają
+Aktualnym źródłem jest `Adresy_PRG_Geoportal.gdb`. Źródłem pisowni wynikowej
+jest `NAZWA_ULC` w warstwach zaczynających się od `PRG_Ulice`
+i `PRG_PunktyAdresowe` (po jednej warstwie każdego rodzaju). Pola `NAZWA_TER1` i `NAZWA_TER2` pomagają
 w dopasowaniu patronów. Nazwy ulic w wyniku nie mają dodatkowego `ul.`, chyba że
 taki tekst znajduje się w samej nazwie PRG. Aleje i place zachowują zapis PRG.
 
@@ -43,5 +44,6 @@ z sąsiednich gmin. Pełnej zgodności wszystkich wpisów z PRG nie można zapew
 jeżeli wpisu brakuje w dostarczonym rejestrze.
 
 Domyślne wyniki: `obwody_glosowania_Lublin_granice.xlsx`
-i `raport_dopasowania_PRG.csv`. Ponowne uruchomienie zastępuje te wyniki.
+i `raport_dopasowania_PRG.csv` w `wyniki_PRG_Geoportal/01_granice`.
+Ponowne uruchomienie tego pojedynczego skryptu zastępuje te wyniki.
 Skrypt odrzuca źródło z istniejącymi kolumnami `Granica_XX`, aby nie dublować kolumn.

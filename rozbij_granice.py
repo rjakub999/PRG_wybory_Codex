@@ -17,6 +17,16 @@ from pathlib import Path
 
 
 BASE = Path(__file__).resolve().parent
+GEO_RESULTS = BASE / 'wyniki_PRG_Geoportal'
+
+
+def prg_layer_name(names, kind):
+    """Jednoznaczny wybór nazw warstw ze starego eksportu i Geoportalu."""
+    prefix = 'PRG_PunktyAdresowe' if kind == 'points' else 'PRG_Ulice'
+    candidates = [name for name in names if name.startswith(prefix)]
+    if len(candidates) != 1:
+        raise ValueError(f'Oczekiwano jednej warstwy {prefix}; znaleziono: {candidates}')
+    return candidates[0]
 
 
 def key(text):
@@ -50,7 +60,9 @@ def read_prg(gdb):
         except (ImportError, RuntimeError) as exc:
             raise RuntimeError('Uruchom w Pythonie QGIS (GDAL) albo licencjonowanym Pythonie ArcGIS Pro.') from exc
         records = []
-        for layer in ['PRG_Ulice_Lublin', 'PRG_PunktyAdresowe_Lublin']:
+        with arcpy.EnvManager(workspace=str(gdb)):
+            names = arcpy.ListFeatureClasses() or []
+        for layer in [prg_layer_name(names, 'streets'), prg_layer_name(names, 'points')]:
             path = str(gdb / layer)
             available = {f.name for f in arcpy.ListFields(path)}
             chosen = [f for f in fields if f in available]
@@ -62,7 +74,8 @@ def read_prg(gdb):
     if dataset is None:
         raise ValueError(f'Nie można otworzyć geobazy: {gdb}')
     records = []
-    for layer_name in ['PRG_Ulice_Lublin', 'PRG_PunktyAdresowe_Lublin']:
+    names = [layer.GetName() for layer in dataset]
+    for layer_name in [prg_layer_name(names, 'streets'), prg_layer_name(names, 'points')]:
         layer = dataset.GetLayerByName(layer_name)
         if layer is None:
             raise ValueError(f'Brak warstwy {layer_name}')
@@ -210,9 +223,9 @@ def process(input_path, gdb, output, report, sheet_name=None):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--input', type=Path, default=BASE / 'obwody_glosowania_Lublin.xlsx')
-    parser.add_argument('--gdb', type=Path, default=BASE / 'Obwody_PRG_ArcGIS.gdb')
-    parser.add_argument('--output', type=Path, default=BASE / 'obwody_glosowania_Lublin_granice.xlsx')
-    parser.add_argument('--report', type=Path, default=BASE / 'raport_dopasowania_PRG.csv')
+    parser.add_argument('--gdb', type=Path, default=BASE / 'Adresy_PRG_Geoportal.gdb')
+    parser.add_argument('--output', type=Path, default=GEO_RESULTS / '01_granice/obwody_glosowania_Lublin_granice.xlsx')
+    parser.add_argument('--report', type=Path, default=GEO_RESULTS / '01_granice/raport_dopasowania_PRG.csv')
     parser.add_argument('--sheet', help='Nazwa arkusza; domyślnie wszystkie z kolumną Opis granic.')
     args = parser.parse_args()
     process(args.input, args.gdb, args.output, args.report, args.sheet)

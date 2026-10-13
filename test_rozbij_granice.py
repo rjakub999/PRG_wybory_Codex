@@ -1,6 +1,6 @@
 """Testy semantyki parsera: python -m unittest test_rozbij_granice.py."""
 import unittest
-from rozbij_granice import StreetIndex, resolve, split_description
+from rozbij_granice import StreetIndex, resolve, split_description, prg_layer_name
 
 
 class ParserTests(unittest.TestCase):
@@ -33,6 +33,13 @@ class ParserTests(unittest.TestCase):
     def test_no_guessed_names(self):
         self.assertEqual(resolve('ul. Krancowwa 5', self.index)[:2],
                          ('ul. Krancowwa 5', 'BRAK_W_PRG'))
+
+    def test_geoportal_layer_names(self):
+        names = ['PRG_PunktyAdresowe_066301_eksport', 'PRG_Ulice_066301_eksport']
+        self.assertEqual(prg_layer_name(names, 'points'), names[0])
+        self.assertEqual(prg_layer_name(names, 'streets'), names[1])
+        with self.assertRaises(ValueError):
+            prg_layer_name(names + ['PRG_PunktyAdresowe_inne'], 'points')
 
 
 if __name__ == '__main__':

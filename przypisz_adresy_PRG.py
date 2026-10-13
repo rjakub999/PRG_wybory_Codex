@@ -11,7 +11,7 @@ import re
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 from pathlib import Path
-from rozbij_granice import BASE, StreetIndex, key, read_prg, resolve, split_description
+from rozbij_granice import BASE, GEO_RESULTS, StreetIndex, key, read_prg, resolve, split_description, prg_layer_name
 
 
 def number(value):
@@ -125,7 +125,7 @@ def run(args):
     args.output_dir.mkdir(parents=True, exist_ok=True)
     index = StreetIndex(read_prg(args.gdb))
     source = ogr.Open(str(args.gdb), 0)
-    layer = source.GetLayerByName('PRG_PunktyAdresowe_Lublin')
+    layer = source.GetLayerByName(prg_layer_name([l.GetName() for l in source], 'points'))
     if layer is None:
         raise ValueError('Brak warstwy PRG_PunktyAdresowe_Lublin')
     required = {'ID_IIP', 'NAZWA_ULC', 'NUMER_PORZ', 'NAZWA_MSC'}
@@ -250,9 +250,9 @@ def run(args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--input', type=Path, default=BASE / 'obwody_glosowania_Lublin_granice.xlsx')
-    parser.add_argument('--gdb', type=Path, default=BASE / 'Obwody_PRG_ArcGIS.gdb')
-    parser.add_argument('--output-dir', type=Path, default=BASE / 'wyniki_adresy_PRG')
+    parser.add_argument('--input', type=Path, default=GEO_RESULTS / '01_granice/obwody_glosowania_Lublin_granice.xlsx')
+    parser.add_argument('--gdb', type=Path, default=BASE / 'Adresy_PRG_Geoportal.gdb')
+    parser.add_argument('--output-dir', type=Path, default=GEO_RESULTS / '02_przypisanie')
     parser.add_argument('--overwrite', action='store_true', help='Zastąp istniejący GeoPackage wynikowy')
     run(parser.parse_args())
 

@@ -6,7 +6,9 @@
 *.gpkg
 *.gpkg-*
 *.rar
+*.zip
 wyniki_adresy_PRG/
+wyniki_PRG_Geoportal/
 __pycache__/
 *.py[cod]
 .pytest_cache/
