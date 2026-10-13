@@ -1,0 +1,12 @@
+# Lokalne dane GIS i skoroszyty oraz wyniki przetwarzania
+*.xlsx
+*.xls
+*.csv
+*.gdb/
+*.gpkg
+*.gpkg-*
+*.rar
+wyniki_adresy_PRG/
+__pycache__/
+*.py[cod]
+.pytest_cache/
